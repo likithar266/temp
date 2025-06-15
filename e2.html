@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    build.gradle: 
+
+    plugins {
+        id 'application'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    }
+
+    application {
+        mainClass = 'com.example.Main'
+    }
+
+    src/main/java/com/example: 
+
+    package com.example;
+
+    public class Main {
+        public static void main(String[] args) {
+            System.out.println("Hello from Gradle!");
+        }
+    }
+
+    /docs
+    task copyWebsite(type: Copy) {
+        from 'src/main/resources/website'
+        into 'docs'
+    }
+   
+</body>
+</html>

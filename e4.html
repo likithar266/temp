@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    kotlin-org.example-Main.kts
+    package com.example
+
+fun main() {
+    println("Hello, Gradle with Kotlin DSL!")
+}
+build.gradle.kts
+
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile  
+  
+plugins {  
+    kotlin("jvm") version "2.1.10"  // this version can be a problem sometimes  
+    application  
+}  // alternatively try with "1.8.10"  
+  
+group = "com.example"  //change to org.example if thats your default groupID  
+version = "1.0-SNAPSHOT"  
+  
+repositories {  
+    mavenCentral()  
+}  
+  
+dependencies {  
+    implementation(kotlin("stdlib"))  
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")  
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")  
+}  
+  
+tasks.test {  
+    useJUnitPlatform()  
+}  
+  
+tasks.withType<KotlinCompile> {  
+    kotlinOptions.jvmTarget = "21" // Match with your JDK version !!!  
+}  
+  
+kotlin {  
+    jvmToolchain(21)  // Here too !!  
+}  
+  
+application {  
+    mainClass.set("com.example.MainKt") // Use your package + filename here  
+}
+
+./gradlew build
+
+
+tasks.register<Jar>("fatJar") {
+    archiveClassifier.set("all")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "com.example.MainKt" //change to org.example if your groupId is org.example
+    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    with(tasks.jar.get() as CopySpec)
+}
+./gradlew fatJar
+
+java -jar build/libs/Experiment4New-1.0-SNAPSHOT-all.jar
+
+</body>
+</html>
